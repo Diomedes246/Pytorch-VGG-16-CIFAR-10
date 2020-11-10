@@ -16,7 +16,8 @@ class VGG_net(nn.Module):
         super(VGG_net, self).__init__()
         self.in_channels = in_channels
         self.conv_layers = self.create_conv_layers(VGG16)
-
+        
+        ## Fully Connected Layer
         self.fcs = nn.Sequential(
             nn.Linear(512, 4096),
             nn.ReLU(),
@@ -58,7 +59,7 @@ class VGG_net(nn.Module):
 
         return nn.Sequential(*layers)
 
-
+#Loading Data
 transform = transforms.Compose(
     [transforms.ToTensor(),
      transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
@@ -85,6 +86,7 @@ model = VGG_net(in_channels=3, num_classes=10).to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.fcs.parameters(), lr=0.001, momentum=0.9)
 
+#Training
 for epoch in range(20):  # loop over the dataset multiple times
 
     running_loss = 0.0
@@ -107,6 +109,7 @@ for epoch in range(20):  # loop over the dataset multiple times
 
 print('Finished Training')
 
+#Testing
 PATH = './cifar_net.pth'
 torch.save(model.state_dict(), PATH)
 
